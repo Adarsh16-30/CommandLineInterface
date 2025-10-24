@@ -30,7 +30,23 @@ npm install
 npm link
 </pre>
 <h4>Environment Setup (.env)</h4>
-<p>Before using advanced features (like AI or GitHub integration), create a <code>.env</code> file in your project root:</p>
+<p>Before using advanced features, you need to set up environment variables for authentication and security.
+Depending on how you install and use MyCLI, here are your options:</p>
+<p><b>If You Installed via npm (Globally):</b></p>
+<ul>
+<li><b>Recommended:</b> Create a <code>.env</code> file in your home directory.
+<ul>
+<li><b>Windows:</b> <code>C:\Users\your-username.env</code></li>
+<li><b>Linux/Mac:</b> <code>/home/your-username/.env</code> or <code>~/.env</code></li>
+</ul>
+</li>
+<li>This is picked up automatically by the CLI if you use <code>dotenv</code>.</li>
+</ul>
+<p><b>If You Cloned the Repository (Locally):</b></p>
+<ul>
+<li>Create a <code>.env</code> file in the root folder of the project.</li>
+</ul>
+<p><b>Example .env contents:</b></p>
 <pre>
 GITHUB_TOKEN=your_github_personal_token_here
 HF_TOKEN=your_huggingface_token_here
@@ -41,6 +57,19 @@ ENCRYPTION_KEY=some-very-strong-random-string
 <li><b>HF_TOKEN:</b> Required for Hugging Face AI integrations (text/code, etc.).</li>
 <li><b>ENCRYPTION_KEY:</b> Used to securely encrypt/decrypt secrets via the CLI.</li>
 </ul>
+<p>Alternatively, you can set these variables directly in your terminal:</p>
+<p><b>Linux/Mac:</b></p>
+<pre>
+export GITHUB_TOKEN=your_github_personal_token_here
+export HF_TOKEN=your_huggingface_token_here
+export ENCRYPTION_KEY=some-very-strong-random-string
+</pre>
+<p><b>Windows (CMD):</b></p>
+<pre>
+set GITHUB_TOKEN=your_github_personal_token_here
+set HF_TOKEN=your_huggingface_token_here
+set ENCRYPTION_KEY=some-very-strong-random-string
+</pre>
 <p><b>Important:</b> Keep your <code>.env</code> file private—never commit it to a public repository.</p>
 <h3>🤖 Example Commands</h3>
 <p>Explore <code>mycli --help</code> for all options and details.</p>
