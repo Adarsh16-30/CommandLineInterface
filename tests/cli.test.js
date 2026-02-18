@@ -1,3 +1,7 @@
+// cli.test.js
+// Integration tests for the CLI. Ensures that every command is registered
+// and responds to the --help flag, proving the basics are working.
+
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { exec } from 'child_process';
@@ -5,22 +9,23 @@ import { promisify } from 'util';
 
 const execAsync = promisify(exec);
 
-// ===== Core CLI Tests =====
-test('CLI should display version', async () => {
+// --- Core CLI Functionality ---
+test('CLI should version check successfully', async () => {
     const { stdout } = await execAsync('node index.js --version');
     assert.match(stdout, /\d+\.\d+\.\d+/);
 });
 
-test('CLI should display help', async () => {
+test('CLI should display the main help menu', async () => {
     const { stdout } = await execAsync('node index.js --help');
     assert.match(stdout, /Usage:/);
 });
 
-// ===== Legacy/Original Commands (13 tests) =====
-test('Greet command should work', async () => {
+// --- Legacy/Original Commands ---
+test('Greet command is available', async () => {
     const { stdout } = await execAsync('node index.js greet --help');
     assert.ok(stdout.includes('greet') || stdout.includes('name'));
 });
+
 
 test('Time command should exist', async () => {
     const { stdout } = await execAsync('node index.js time --help');

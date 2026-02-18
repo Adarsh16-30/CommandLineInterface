@@ -1,9 +1,14 @@
+// help-all.js
+// Displays a comprehensive list of all 42 commands categorized by function.
+// Helps users discover the full capabilities of the toolkit.
+
 import chalk from 'chalk';
 
 export default function (program) {
     program
         .command('help-all')
-        .description('Display all available commands organized by category')
+        .description('Show full command reference')
+
         .action(() => {
             console.log(chalk.bold.cyan('\n MyCLI - Complete Command Reference\n'));
 
