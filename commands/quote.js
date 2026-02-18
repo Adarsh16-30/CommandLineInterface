@@ -1,3 +1,6 @@
+// quote.js
+// Fetches a random motivational quote from the ZenQuotes API and prints it.
+
 import chalk from "chalk";
 import ora from "ora";
 import axios from "axios";

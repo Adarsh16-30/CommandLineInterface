@@ -1,3 +1,7 @@
+// joke.js
+// Pulls a random programming joke from a public API and prints it.
+// No auth needed — the official joke API is free and open.
+
 import chalk from "chalk";
 import ora from "ora";
 import axios from "axios";
