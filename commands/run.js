@@ -1,3 +1,6 @@
+// run.js
+// Runs an npm script from the current project and streams its output live.
+
 import { exec } from "child_process";
 import ora from "ora";
 import chalk from "chalk";

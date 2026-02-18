@@ -1,3 +1,8 @@
+// init.js
+// Scaffolds a new project from a template (react, express, nextjs, python, etc.).
+// For framework templates it delegates to the official CLI tools (vite, create-next-app).
+// For simpler templates it writes the files directly.
+
 import fs from "fs-extra";
 import path from "path";
 import ora from "ora";

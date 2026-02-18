@@ -1,3 +1,7 @@
+// serve.js
+// Spins up a quick static file server from the current directory and opens it
+// in the browser. Great for previewing HTML files without a full dev setup.
+
 import express from "express";
 import chalk from "chalk";
 import open from "open";
@@ -9,6 +13,7 @@ export default (program) => {
     .action((port = 3000) => {
       const app = express();
 
+      // Serve everything in the current working directory as static files
       app.use(express.static(process.cwd()));
 
       app.listen(port, async () => {
@@ -18,3 +23,4 @@ export default (program) => {
       });
     });
 };
+
