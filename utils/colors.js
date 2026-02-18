@@ -10,15 +10,15 @@ import os from "os";
 const configPath = path.join(os.homedir(), ".mycli-config.json");
 let theme = "dark";
 try {
- if (fs.existsSync(configPath)) {
- const config = fs.readJsonSync(configPath);
- theme = config.theme || "dark";
- }
+  if (fs.existsSync(configPath)) {
+    const config = fs.readJsonSync(configPath);
+    theme = config.theme || "dark";
+  }
 } catch { theme = "dark"; }
 
 const colors = theme === "light"
- ? { successColor: chalk.green, infoColor: chalk.blue, warnColor: chalk.yellow, errorColor: chalk.red }
- : { successColor: chalk.greenBright, infoColor: chalk.cyanBright, warnColor: chalk.yellowBright, errorColor: chalk.redBright };
+  ? { successColor: chalk.green, infoColor: chalk.blue, warnColor: chalk.yellow, errorColor: chalk.red }
+  : { successColor: chalk.greenBright, infoColor: chalk.cyanBright, warnColor: chalk.yellowBright, errorColor: chalk.redBright };
 
 export const success = (msg) => console.log(colors.successColor(msg));
 export const info = (msg) => console.log(colors.infoColor(msg));

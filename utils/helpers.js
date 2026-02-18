@@ -8,10 +8,10 @@ import os from "os";
 export const configPath = path.join(os.homedir(), ".mycli-config.json");
 
 export const loadConfig = async () => {
- if (!fs.existsSync(configPath)) return {};
- return fs.readJson(configPath);
+  if (!fs.existsSync(configPath)) return {};
+  return fs.readJson(configPath);
 };
 
 export const saveConfig = async (data) => {
- await fs.writeJson(configPath, data, { spaces: 2 });
+  await fs.writeJson(configPath, data, { spaces: 2 });
 };
