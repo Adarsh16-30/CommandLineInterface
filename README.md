@@ -3,35 +3,92 @@
 <b>A fully featured Node.js CLI toolkit for modern automation and developer workflows.</b>
 
 <i>Uses Commander, Chalk, Inquirer, Axios, OpenAI, simple-git, and more.</i>
-</p>
-<hr>
-<h3>🚀 Features</h3>
-<ul>
-<li><b>Extensible Commands:</b> Includes utilities for greet, time, quote, init, config, joke, file manipulation, git operations, server tools, updates, info, script runner, AI code explanations (Hugging Face/OpenAI), Docker management, GitHub integration, todo lists, secret management, linting, audits, theming, and more.</li>
-<li><b>Modular Structure:</b> All commands are organized in the <code>commands/</code> folder.</li>
-<li><b>Beautiful Output:</b> Uses <code>chalk</code> and <code>figlet</code> for colorful banners and stylish CLI interfaces.</li>
-<li><b>Configurable & Secure:</b> Supports <code>.env</code> and custom config file management for tokens and secrets.</li>
-<li><b>Modern Toolkit:</b> Built with Commander, Chalk, Inquirer, Axios, HuggingFace API, OpenAI, simple-git, express, and ora spinners.</li>
-</ul>
-<h3>🛠️ Getting Started</h3>
-<h4>Option 1: Install from npm (Recommended)</h4>
-<p>This makes <code>mycli</code> available globally:</p>
-<pre>
-npm install -g @adarsht0912/mycli
-</pre>
-<h4>Option 2: Clone This Repository</h4>
-<pre>
-git clone https://github.com/Adarsh16-30/CommandLineInterface.git
-cd CommandLineInterface
-npm install
-</pre>
-<p>(Optional) To make the command available globally from the cloned folder:</p>
-<pre>
-npm link
-</pre>
-<h4>Environment Setup (.env)</h4>
-<p>Before using advanced features, you need to set up environment variables for authentication and security.
-Depending on how you install and use MyCLI, here are your options:</p>
+# MyCLI 🚀
+
+**MyCLI** is a powerful Node.js toolkit designed to supercharge your terminal. It bundles 40+ essential developer tools into a single, cohesive interface — from system monitoring and DevOps utilities to productivity timers and AI-powered coding assistants.
+
+> **Status:** Active Development  
+> **Version:** 3.0.0
+
+## ✨ Key Features
+
+- **System Monitoring:** Real-time CPU, RAM, Network, and Disk usage dashboards (TUI).
+- **Pro Developer Tools:** HTTP client, JSON viewer, Regex tester, Base64 encoder, and more.
+- **Productivity:** Pomodoro timer, Notes manager, Todo list, and Clipboard manager.
+- **DevOps:** SSH manager, Docker controller (TUI), and Deployment helpers (GitHub/Vercel/Netlify).
+- **AI Integration:** Chat with AI, explain code, and generate comprehensive answers (via Hugging Face).
+- **Customization:** Multiple themes (Dracula, Monokai) and configurable settings.
+
+## 📦 Installation
+
+```bash
+npm install -g mycli
+```
+
+Or run it directly without installing:
+
+```bash
+npx mycli --help
+```
+
+## 🚀 Getting Started
+
+Once installed, simply run `mycli` to see the available commands, or use `mycli help-all` for the complete reference.
+
+```bash
+mycli help-all
+```
+
+## 🛠️ Example Commands
+
+### 🖥️ System & Monitoring
+- **`mycli monitor`** — Launch the full-screen system dashboard.
+- **`mycli process -s node`** — Find and manage running processes.
+- **`mycli net speed`** — Run a quick internet speed test.
+- **`mycli disk analyze`** — Visualize what's taking up space on your drive.
+
+### 🛠️ Developer Utilities
+- **`mycli http get https://api.github.com/users/google`** — Test APIs instantly.
+- **`mycli json view data.json`** — View JSON files with syntax highlighting.
+- **`mycli regex`** — Test regular expressions interactively.
+- **`mycli utils uuid -n 5`** — Generate 5 random UUIDs.
+
+### 🚀 DevOps & Deployment
+- **`mycli ssh connect myserver`** — Connect to your saved SSH servers.
+- **`mycli deploy static ./dist`** — Deploy a static site to GitHub Pages in one command.
+- **`mycli docker ps`** — View active Docker containers.
+
+### 🧠 AI & Productivity
+- **`mycli ai ask "How do I reverse a string in Rust?"`** — Get coding answers instantly.
+- **`mycli focus -w 25`** — Start a 25-minute focus timer.
+- **`mycli notes new ideas`** — Jot down quick notes in markdown.
+- **`mycli ticker crypto BTC`** — Check the price of Bitcoin.
+
+## 📂 Project Structure
+
+```
+.
+├── commands/       # 40+ command modules (one file per command)
+├── utils/          # Shared helpers (TUI engine, config, colors)
+├── tests/          # Integration tests
+├── index.js        # Main CLI entry point
+└── package.json    # Dependencies and scripts
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the project
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+CLI interfaces.
 <p><b>If You Installed via npm (Globally):</b></p>
 <ul>
 <li><b>Recommended:</b> Create a <code>.env</code> file in your home directory.
