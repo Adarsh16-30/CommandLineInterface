@@ -7,12 +7,18 @@
   },
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --test tests/cli.test.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "cli",
+    "nodejs",
+    "developer-tools",
+    "automation",
+    "terminal"
+  ],
+  "author": "Adarsh",
   "license": "ISC",
-  "description": "",
+  "description": "A fully featured Node.js CLI toolkit for modern automation and developer workflows",
   "dependencies": {
     "@huggingface/inference": "^4.13.0",
     "@octokit/rest": "^22.0.0",
