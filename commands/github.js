@@ -1,5 +1,6 @@
 // github.js
-// GitHub API helpers for repo and issue creation and file upload.
+// GitHub API helpers using Octokit. Supports creating repos, opening issues,
+// and uploading files — all without leaving the terminal.
 
 import { Octokit } from "@octokit/rest";
 import chalk from "chalk";

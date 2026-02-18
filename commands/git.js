@@ -1,5 +1,6 @@
 // git.js
-// CLI commands for common git actions.
+// Wraps the most common git operations (init, commit, push, status) so you
+// can run them through mycli without switching to a separate terminal.
 
 import simpleGit from "simple-git";
 import ora from "ora";

@@ -1,3 +1,10 @@
+// ai.js
+// Three AI-powered commands backed by Hugging Face Inference:
+//   explain — analyze a file or code snippet
+//   chat    — start a multi-turn conversation session
+//   ask     — get a one-shot answer to any question
+// Requires HF_TOKEN (or HUGGING_FACE_TOKEN) in your .env file.
+
 import fs from "fs";
 import { HfInference } from "@huggingface/inference";
 import chalk from "chalk";
@@ -14,7 +21,7 @@ export default (program) => {
     .action(async (fileOrCode, opts) => {
       // Check for Hugging Face token in environment variables
       const key = process.env.HUGGING_FACE_TOKEN || process.env.HF_TOKEN;
-      
+
       if (!key) {
         console.error(chalk.red("HUGGING_FACE_TOKEN missing in .env"));
         console.log(chalk.yellow("Get your free token at: https://huggingface.co/settings/tokens"));
@@ -46,7 +53,7 @@ export default (program) => {
         if (opts.streaming) {
           spinner.stop();
           console.log(chalk.green("Explanation:\n"));
-          
+
           const stream = client.chatCompletionStream({
             model: opts.model,
             messages: [
@@ -79,7 +86,7 @@ export default (program) => {
       } catch (err) {
         console.error(chalk.red("\nRequest failed:"));
         console.error(chalk.red(err.message || err));
-        
+
         // Provide helpful feedback for common errors
         if (err.message?.includes("rate limit")) {
           console.log(chalk.yellow("Rate limit hit. Try again in a few moments."));
@@ -97,7 +104,7 @@ export default (program) => {
     .action(async (opts) => {
       // Check for Hugging Face token in environment variables
       const key = process.env.HUGGING_FACE_TOKEN || process.env.HF_TOKEN;
-      
+
       if (!key) {
         console.error(chalk.red("HUGGING_FACE_TOKEN missing in .env"));
         console.log(chalk.yellow("Get your free token at: https://huggingface.co/settings/tokens"));
@@ -105,7 +112,7 @@ export default (program) => {
       }
 
       const client = new HfInference(key);
-      
+
       // Store conversation history in memory for this session
       const conversationHistory = [];
 
@@ -170,11 +177,11 @@ export default (program) => {
 
         } catch (err) {
           console.error(chalk.red("\nRequest failed: ") + err.message);
-          
+
           if (err.message?.includes("rate limit")) {
             console.log(chalk.yellow("Rate limit hit. Try again in a few moments.\n"));
           }
-          
+
           // Continue conversation even after an error
           await askQuestion();
         }
@@ -192,7 +199,7 @@ export default (program) => {
     .action(async (question, opts) => {
       // Check for Hugging Face token in environment variables
       const key = process.env.HUGGING_FACE_TOKEN || process.env.HF_TOKEN;
-      
+
       if (!key) {
         console.error(chalk.red("HUGGING_FACE_TOKEN missing in .env"));
         console.log(chalk.yellow("Get your free token at: https://huggingface.co/settings/tokens"));
