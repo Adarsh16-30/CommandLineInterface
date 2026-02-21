@@ -5,64 +5,89 @@ import { Command } from "commander";
 import chalk from "chalk";
 import figlet from "figlet";
 import dotenv from "dotenv";
+
 dotenv.config();
 
-import greet from "./commands/greet.js";
-import time from "./commands/time.js";
-import quote from "./commands/quote.js";
-import init from "./commands/init.js";
-import config from "./commands/config.js";
-import joke from "./commands/joke.js";
-import file from "./commands/file.js";
-import git from "./commands/git.js";
-import serve from "./commands/serve.js";
-import update from "./commands/update.js";
-import info from "./commands/info.js";
-import run from "./commands/run.js";
-import ai from "./commands/ai.js";
-import template from "./commands/template.js";
-import dockerCmd from "./commands/docker.js";
-import githubCmd from "./commands/github.js";
-import todoCmd from "./commands/todo.js";
-import secret from "./commands/secret.js";
-import lint from "./commands/lint.js";
-import audit from "./commands/audit.js";
-import openCmd from "./commands/open.js";
-import theme from "./commands/theme.js";
+import fs from "fs-extra";
+import path from "path";
+import { logger } from "./utils/logger.js";
+import { fileURLToPath, pathToFileURL } from "url";
 
-// Output CLI banner.
-console.log(
-  chalk.cyanBright(figlet.textSync("My CLI", { horizontalLayout: "fitted" }))
-);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-// Register commands.
+process.on("uncaughtException", (err) => {
+  logger.error("Uncaught Exception", { message: err.message, stack: err.stack });
+  console.error(chalk.red("\n✖ [Fatal Error] An unexpected issue occurred within the CLI:"));
+  console.error(chalk.red(err.message));
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (reason) => {
+  logger.error("Unhandled Rejection", { reason });
+  console.error(chalk.red("\n✖ [Promise Error] A background task failed unexpectedly:"));
+  console.error(chalk.red(reason.stack || reason));
+  process.exit(1);
+});
+
+const ci = process.env.CI === "true" || process.argv.includes("--ci");
+const jsonOut = process.argv.includes("--output") && process.argv.includes("json");
+
+if (!ci && !jsonOut) {
+  console.log(chalk.cyanBright(figlet.textSync("My CLI", { horizontalLayout: "fitted" })));
+}
+
+const SECRETS_PATTERNS = [/sk-[a-zA-Z0-9]{32,}/, /ghp_[a-zA-Z0-9]{36}/, /AKIA[0-9A-Z]{16}/];
+if (process.argv.some(arg => SECRETS_PATTERNS.some(p => p.test(arg)))) {
+  logger.warn("Potential secret leak detected in command arguments.");
+  console.error(chalk.bgRed.white.bold("\n ⚠️ WARNING: Potential secret passed in plain text. Please use secure config profiles instead. \n"));
+}
+
 const program = new Command();
+
 program
   .name("mycli")
   .description("A fully featured Node.js CLI toolkit")
-  .version("2.0.0");
+  .version("3.0.0")
+  .option("--ci", "Run in CI mode")
+  .option("--output <format>", "Output format");
 
-greet(program);
-time(program);
-quote(program);
-init(program);
-config(program);
-joke(program);
-file(program);
-git(program);
-serve(program);
-update(program);
-info(program);
-run(program);
-ai(program);
-template(program);
-dockerCmd(program);
-githubCmd(program);
-openCmd(program);
-todoCmd(program);
-secret(program);
-lint(program);
-audit(program);
-theme(program);
+async function loadCommands() {
+  const commandsDir = path.join(__dirname, "commands");
+  const files = await fs.readdir(commandsDir);
 
-program.parse(process.argv); // Start CLI parsing.
+  for (const file of files) {
+    if (file.endsWith(".js")) {
+      const fileUrl = pathToFileURL(path.join(commandsDir, file)).href;
+      const { default: registerCommand } = await import(fileUrl);
+      if (typeof registerCommand === "function") {
+        registerCommand(program);
+      }
+    }
+  }
+
+  // Dynamic Plugin Interface Loading
+  const pluginsDir = path.join(process.cwd(), "node_modules", "@mycli");
+  if (fs.existsSync(pluginsDir)) {
+    const plugins = await fs.readdir(pluginsDir);
+    for (const plugin of plugins) {
+      if (plugin.startsWith("plugin-")) {
+        try {
+          const { default: p } = await import(path.join("file://", pluginsDir, plugin, "index.js"));
+          if (p && p.commands) {
+            p.commands.forEach(cmd => {
+              program.command(cmd.name).description(`[Plugin] ${cmd.description}`).action(cmd.action);
+            });
+          }
+        } catch (err) {
+          logger.error(`Failed to load plugin: ${plugin}`, { error: err.message });
+        }
+      }
+    }
+  }
+}
+
+loadCommands().then(() => {
+  program.parse(process.argv);
+});
+

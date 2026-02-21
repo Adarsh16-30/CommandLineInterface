@@ -1,6 +1,3 @@
-// file.js
-// Basic file operations — create a blank file, read its contents, or delete it.
-// Handy for quick file management without leaving the terminal.
 
 import fs from "fs-extra";
 import chalk from "chalk";

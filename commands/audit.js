@@ -11,7 +11,6 @@ export default function (program) {
       const spinner = ora("Running security audit...").start();
       
       try {
-        // Allow running audit in a different directory
         process.chdir(folder);
 
         if (options.fix) {
@@ -22,13 +21,11 @@ export default function (program) {
         } else {
           spinner.text = "Analyzing dependencies...";
           try {
-            // Run with --json to get parsable output
             const output = execSync("npm audit --json", { encoding: "utf8" });
             const audit = JSON.parse(output);
             
             spinner.succeed("Audit complete!");
             
-            // Display our own custom summary
             console.log("\n" + "=".repeat(50));
             info("📊 Security Audit Summary");
             console.log("=".repeat(50));
@@ -51,8 +48,6 @@ export default function (program) {
             }
             
           } catch (auditErr) {
-            // npm audit exits with code 1 if vulns are found, this is expected
-            // We can just log its standard output in this case
             spinner.succeed("Audit complete (vulnerabilities found)");
             console.log(auditErr.stdout);
           }

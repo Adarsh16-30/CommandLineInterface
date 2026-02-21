@@ -15,7 +15,6 @@ export default (program) => {
       const spinner = ora(`Creating ${type} project ${name}...`).start();
       try {
         if (type === "react") {
-          // Defer to create-vite, a dedicated scaffolding tool
           exec(`npm create vite@latest ${name} -- --template react -y`, { stdio: 'inherit' }, (err) => {
             if (err) {
               spinner.fail("React template failed");
@@ -25,7 +24,6 @@ export default (program) => {
             }
           });
         } else if (type === "express") {
-          // Create a minimal express starter manually
           await fs.ensureDir(target);
           await fs.writeJson(path.join(target, "package.json"), {
             name, version: "1.0.0", main: "index.js",
@@ -34,13 +32,11 @@ export default (program) => {
           await fs.writeFile(path.join(target, "index.js"), `import express from "express"; const app = express(); app.get("/", (req,res)=>res.send("Hello")); app.listen(3000);`);
           spinner.succeed("Express starter created");
         } else if (type === "python") {
-          // Create a minimal python starter
           await fs.ensureDir(target);
           await fs.writeFile(path.join(target, "app.py"), `print("Hello from Python starter")`);
           await fs.writeFile(path.join(target, "requirements.txt"), "");
           spinner.succeed("Python starter created");
         } else if (type === "nextjs") {
-          // Defer to create-next-app
           exec(`npx create-next-app@latest ${name} --ts --eslint --tailwind`, { stdio: 'inherit' }, (err) => {
             if (err) {
               spinner.fail("Next.js template failed");
@@ -50,7 +46,6 @@ export default (program) => {
             }
           });
         } else if (type === "node_api") {
-          // Minimal node API starter
           await fs.ensureDir(target);
           await fs.writeJson(path.join(target, "package.json"), {
             name, version: "1.0.0", main: "server.js",
@@ -59,7 +54,6 @@ export default (program) => {
           await fs.writeFile(path.join(target, "server.js"), `import express from "express"; const app = express(); app.use(express.json()); app.get("/", (req,res)=>res.send("Hello from Node API")); app.listen(3000);`);
           spinner.succeed("Node API starter created");
         } else if (type === "vite_react") {
-          // Same as 'react' template
           exec(`npm create vite@latest ${name} -- --template react -y`, { stdio: 'inherit' }, (err) => {
             if (err) {
               spinner.fail("Vite React template failed");

@@ -1,6 +1,3 @@
-// github.js
-// GitHub API helpers using Octokit. Supports creating repos, opening issues,
-// and uploading files — all without leaving the terminal.
 
 import { Octokit } from "@octokit/rest";
 import chalk from "chalk";
@@ -19,7 +16,6 @@ export default (program) => {
 
       try {
         if (action === "create-repo") {
-          // Create a public repo for this user.
           const resp = await octokit.rest.repos.createForAuthenticatedUser({
             name,
             private: false,
@@ -27,7 +23,6 @@ export default (program) => {
           });
           console.log(chalk.green("Repo created:"), resp.data.html_url);
         } else if (action === "create-issue") {
-          // Create an issue. Expects owner/repo in name.
           const [owner, repo] = name.split("/");
           const issue = await octokit.rest.issues.create({
             owner,
@@ -37,7 +32,6 @@ export default (program) => {
           });
           console.log(chalk.green("Issue created:"), issue.data.html_url);
         } else if (action === "upload-files") {
-          // Upload index.js to the repo (owner/repo in name).
           const [owner, repo] = name.split("/");
           const filePath = path.join(process.cwd(), "index.js");
           const content = await fs.readFile(filePath, "utf8");

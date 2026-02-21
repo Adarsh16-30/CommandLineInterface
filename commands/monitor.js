@@ -1,6 +1,3 @@
-// monitor.js
-// A full-screen terminal dashboard (TUI) for monitoring system health.
-// Uses blessed-contrib to draw fancy charts for CPU, RAM, Network, and Disk.
 
 import { TUIEngine } from '../utils/tui-engine.js';
 import si from 'systeminformation';
@@ -13,11 +10,9 @@ export default function (program) {
         .description('Real-time system monitoring dashboard')
         .option('-i, --interval <ms>', 'Update interval in milliseconds', '1000')
         .action(async (options) => {
-            // Initialize our custom TUI engine which handles theming
             const tui = new TUIEngine();
             const screen = tui.getScreen();
 
-            // Create a 12x12 grid to layout our widgets
             const grid = new contrib.grid({ rows: 12, cols: 12, screen: screen });
 
             const cpuLine = grid.set(0, 0, 4, 6, contrib.line, {

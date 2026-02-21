@@ -3,164 +3,242 @@
 <b>A fully featured Node.js CLI toolkit for modern automation and developer workflows.</b>
 
 <i>Uses Commander, Chalk, Inquirer, Axios, OpenAI, simple-git, and more.</i>
-# MyCLI 🚀
+# 🧠 Terminal-Based Developer Toolkit using Node.js
 
-**MyCLI** is a powerful Node.js toolkit designed to supercharge your terminal. It bundles 40+ essential developer tools into a single, cohesive interface — from system monitoring and DevOps utilities to productivity timers and AI-powered coding assistants.
+This project implements an **end-to-end command-line interface (CLI) toolkit** to **supercharge developer productivity** using Node.js and modern terminal libraries.
 
-> **Status:** Active Development  
-> **Version:** 3.0.0
+The goal is to provide a single interface for **system monitoring, productivity tracking, API testing, and AI-driven assistance**, which is a common and critical task for **software engineers and DevOps professionals**.
 
-## ✨ Key Features
+---
 
-- **System Monitoring:** Real-time CPU, RAM, Network, and Disk usage dashboards (TUI).
-- **Pro Developer Tools:** HTTP client, JSON viewer, Regex tester, Base64 encoder, and more.
-- **Productivity:** Pomodoro timer, Notes manager, Todo list, and Clipboard manager.
-- **DevOps:** SSH manager, Docker controller (TUI), and Deployment helpers (GitHub/Vercel/Netlify).
-- **AI Integration:** Chat with AI, explain code, and generate comprehensive answers (via Hugging Face).
-- **Customization:** Multiple themes (Dracula, Monokai) and configurable settings.
+## 📌 Project Overview
 
-## 📦 Installation
+* **Input**: Terminal commands and interactive prompts
+* **Output**: Formatted data, TUI dashboards, and system actions
+* **Approach**:
+  * Build a scalable command architecture using `commander`
+  * Add interactive configurations using `inquirer`
+  * Integrate system monitoring using `systeminformation`
+  * Enable beautiful TUI rendering using `blessed` and `chalk`
+
+This project focuses on **practical CLI engineering**, handling:
+* Asynchronous processes
+* System-level integrations
+* Terminal user interfaces
+* Interactive prompts and formatting
+
+---
+
+## 🧪 Core Capabilities
+
+This project offers the **MyCLI (Developer Toolkit)**.
+
+### 🔗 Toolkit installation (REQUIRED)
+
+You **must install the tool globally** to use it efficiently:
+
+👉 **[npm install -g mycli] (Or linking locally)**
+
+After cloning:
+1. Extract the files
+2. Run `npm install` and `npm link` in the root directory
+
+```text
+project-root/
+│── commands/
+│── utils/
+│── tests/
+│── index.js
+│── package.json
+│── README.md
+```
+
+⚠️ Environment variables (`GITHUB_TOKEN`, `HF_TOKEN`) are **not included** and must be provided via a `.env` file or CLI config.
+
+---
+
+## 📊 Command Categories
+
+After installation, the CLI contains the following categories:
+
+| Category Name | Description |
+| --- | --- |
+| `System & Monitoring` | Real-time CPU, RAM, Network, and Disk usage dashboards |
+| `Dev Tools` | HTTP client, JSON viewer, Regex tester, Base64 encoder |
+| `Productivity` | Pomodoro timer, Notes manager, Todo list, Clipboard |
+| `DevOps` | SSH manager, Docker controller, Deployment helpers |
+| `AI & Chat` | Explain code and chat with AI (Hugging Face / OpenAI) |
+| `Customization` | Multiple themes (Dracula, Monokai) and config options |
+
+---
+
+## 🧠 Key Commands
+
+Common utilities include:
+
+* `monitor` (System Resource TUI)
+* `http get/post` (API Tester)
+* `focus` (Pomodoro Timer)
+* `notes` (Markdown Manager)
+* `docker` (Container CLI)
+* `ai ask` (AI Coding Assistant)
+* `clipboard` (Copy/Paste Utils)
+* `regex` (Pattern Matcher)
+* `ticker` (Crypto/Stock Prices)
+
+Each command corresponds to **real daily productivity needs** such as checking disk space, generating secure passwords, deploying sites, or extracting JSON.
+
+---
+
+## 🏗️ Architecture & High-Level Design
+
+The CLI uses a **modular command architecture** designed for extensibility:
+
+* `commander` for routing (e.g., `mycli <command>`)
+* Shared utility layer (`tui-engine.js`, `helpers.js`)
+* Command modules segregated by domain (e.g., `commands/network.js`)
+* Configurable styling using `chalk` and themes
+
+```mermaid
+graph TD
+    User([User CLI Input]) --> Main[index.js Entry Point]
+    Main --> Commander[Commander.js Router]
+    
+    Commander -->|Registers| Config([Core Settings])
+    Commander -->|Registers| Utils([Developer Utilities])
+    Commander -->|Registers| Domain[Domain Commands]
+    
+    Domain --> TUI[TUI Engine]
+    Domain --> Helpers[Helper Functions]
+    Domain --> ExtAPI[External APIs]
+```
+
+This architecture is lightweight, extensible, and well-suited for **rapid feature addition**.
+
+---
+
+## 🛡️ Enterprise Features
+
+* **Strict CI/CD Pipelines:** Automated matrix testing across Node 18, 20, and 22 via GitHub Actions.
+* **Security Auditing:** Zero-day package checks run automatically on every push via `npm audit`.
+* **Global Error Handling:** Application degradation is handled gracefully using `uncaughtException` intercepts—say goodbye to messy stack traces for end users.
+* **Component Segregation:** Logic separation into discrete modules makes the system inherently scalable.
+
+---
+
+## ⚙️ Requirements
+
+### 🐍 Node.js
+
+* **Node.js 18.x or higher (mandatory)**
+  > Newer versions with native fetch/test runner support are recommended.
+
+### 📦 Node Dependencies
+
+Core dependencies include:
+```txt
+commander>=11.0.0
+chalk>=5.0.0
+inquirer>=9.0.0
+axios>=1.0.0
+blessed>=0.1.8
+blessed-contrib>=4.114.2
+```
+
+Install all dependencies:
+```bash
+npm install
+```
+
+---
+
+## 🛠️ Environment Setup
+
+### 1️⃣ Clone and setup
 
 ```bash
-npm install -g mycli
+git clone https://github.com/Adarsh16-30/CommandLineInterface.git
+cd CommandLineInterface
+npm install
 ```
 
-Or run it directly without installing:
+### 2️⃣ Verify Node version
 
 ```bash
-npx mycli --help
+node --version
 ```
 
-## 🚀 Getting Started
+Expected:
+```text
+v18.x.x or higher
+```
 
-Once installed, simply run `mycli` to see the available commands, or use `mycli help-all` for the complete reference.
+---
+
+## ▶️ How to Run
+
+Once installed and dependencies are ready:
 
 ```bash
-mycli help-all
+npx mycli help-all
 ```
 
-## 🛠️ Example Commands
+The script will:
+* Load all 40+ commands
+* Display the organized help menu
+* Let you select and run interactive commands like `mycli monitor` or `mycli demo`
 
-### 🖥️ System & Monitoring
-- **`mycli monitor`** — Launch the full-screen system dashboard.
-- **`mycli process -s node`** — Find and manage running processes.
-- **`mycli net speed`** — Run a quick internet speed test.
-- **`mycli disk analyze`** — Visualize what's taking up space on your drive.
+---
 
-### 🛠️ Developer Utilities
-- **`mycli http get https://api.github.com/users/google`** — Test APIs instantly.
-- **`mycli json view data.json`** — View JSON files with syntax highlighting.
-- **`mycli regex`** — Test regular expressions interactively.
-- **`mycli utils uuid -n 5`** — Generate 5 random UUIDs.
+## 📈 Output Artifacts
 
-### 🚀 DevOps & Deployment
-- **`mycli ssh connect myserver`** — Connect to your saved SSH servers.
-- **`mycli deploy static ./dist`** — Deploy a static site to GitHub Pages in one command.
-- **`mycli docker ps`** — View active Docker containers.
+After running various commands, you will get:
 
-### 🧠 AI & Productivity
-- **`mycli ai ask "How do I reverse a string in Rust?"`** — Get coding answers instantly.
-- **`mycli focus -w 25`** — Start a 25-minute focus timer.
-- **`mycli notes new ideas`** — Jot down quick notes in markdown.
-- **`mycli ticker crypto BTC`** — Check the price of Bitcoin.
+* `.mycli-config.json` → user configuration profile
+* `.mycli-notes/` → stored markdown notes
+* Terminal dashboards (TUI rendering)
+* Console metrics (Network speeds, CPU usage, etc.)
 
-## 📂 Project Structure
+---
 
-```
-.
-├── commands/       # 40+ command modules (one file per command)
-├── utils/          # Shared helpers (TUI engine, config, colors)
-├── tests/          # Integration tests
-├── index.js        # Main CLI entry point
-└── package.json    # Dependencies and scripts
-```
+## 🧠 Why CLI Tools?
 
-## 🤝 Contributing
+Developer tasks are **text-based workflows** (deployments, file generation, API calls).
+CLIs naturally provide:
+* Speed and automation
+* Keyboard-only efficiency
+* Low resource overhead
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+This makes them the **industry-standard choice** for modern developer experience (DX).
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+---
 
-## 📄 License
+## 🎯 Project Highlights (Resume-Ready)
 
-This project is licensed under the MIT License - see the LICENSE file for details.
-CLI interfaces.
-<p><b>If You Installed via npm (Globally):</b></p>
-<ul>
-<li><b>Recommended:</b> Create a <code>.env</code> file in your home directory.
-<ul>
-<li><b>Windows:</b> <code>C:\Users\your-username.env</code></li>
-<li><b>Linux/Mac:</b> <code>/home/your-username/.env</code> or <code>~/.env</code></li>
-</ul>
-</li>
-<li>This is picked up automatically by the CLI if you use <code>dotenv</code>.</li>
-</ul>
-<p><b>If You Cloned the Repository (Locally):</b></p>
-<ul>
-<li>Create a <code>.env</code> file in the root folder of the project.</li>
-</ul>
-<p><b>Example .env contents:</b></p>
-<pre>
-GITHUB_TOKEN=your_github_personal_token_here
-HF_TOKEN=your_huggingface_token_here
-ENCRYPTION_KEY=some-very-strong-random-string
-</pre>
-<ul>
-<li><b>GITHUB_TOKEN:</b> Needed for GitHub integrations (repo, issues, etc.).</li>
-<li><b>HF_TOKEN:</b> Required for Hugging Face AI integrations (text/code, etc.).</li>
-<li><b>ENCRYPTION_KEY:</b> Used to securely encrypt/decrypt secrets via the CLI.</li>
-</ul>
-<p>Alternatively, you can set these variables directly in your terminal:</p>
-<p><b>Linux/Mac:</b></p>
-<pre>
-export GITHUB_TOKEN=your_github_personal_token_here
-export HF_TOKEN=your_huggingface_token_here
-export ENCRYPTION_KEY=some-very-strong-random-string
-</pre>
-<p><b>Windows (CMD):</b></p>
-<pre>
-set GITHUB_TOKEN=your_github_personal_token_here
-set HF_TOKEN=your_huggingface_token_here
-set ENCRYPTION_KEY=some-very-strong-random-string
-</pre>
-<p><b>Important:</b> Keep your <code>.env</code> file private—never commit it to a public repository.</p>
-<h3>🤖 Example Commands</h3>
-<p>Explore <code>mycli --help</code> for all options and details.</p>
-<ul>
-<li><code>mycli greet</code> – Show a custom banner and welcome</li>
-<li><code>mycli time</code> – Display the current time</li>
-<li><code>mycli quote</code> – Get motivational quotes</li>
-<li><code>mycli init</code> – Initialize new CLI configs/projects</li>
-<li><code>mycli config</code> – Edit/view CLI config</li>
-<li><code>mycli joke</code> – Print a random joke</li>
-<li><code>mycli ai</code> – Ask AI for code help</li>
-<li><code>mycli github</code> – Interact with GitHub</li>
-<li><code>mycli todo</code> – Manage TODOs</li>
-<li><code>mycli secret</code> – Encrypt/decrypt secrets</li>
-<li><code>mycli lint</code> – JavaScript linting</li>
-<li><code>mycli audit</code> – Security checks</li>
-</ul>
-<h3>📁 Project Folder Structure</h3>
-<pre>
-CommandLineInterface/
-├── commands/            # Modular CLI command implementations
-│   ├── greet.js
-│   ├── time.js
-│   └── ...other commands...
-├── utils/               # Utilities (helpers, colors, etc.)
-│   ├── colors.js
-│   └── helpers.js
-├── index.js             # Main entry point (registers CLI and commands)
-├── package.json         # Project metadata & dependencies
-├── .env                 # Required environment variables (not committed)
-└── README.md            # This documentation
-</pre>
-<h3>🤝 Contributing</h3>
-<p>Feel free to fork, submit PRs, or open issues for bugs/feature requests!</p>
-<h3>📝 License</h3>
-<p>This project is intended for educational purposes and personal learning only. Please use, modify, and share it to enhance your understanding of CLI tools and Node.js development.</p>
-<p align="center"><b>Made by Adarsh</b></p>
+* Built an end-to-end Node.js CLI toolkit for developer workflows
+* Handled real-world system integrations (processes, network, disk)
+* Designed interactive Text User Interfaces (TUIs) using blessed-contrib
+* Implemented modular command architecture and plugin readiness
+* Focused on practical productivity rather than simple shell scripts
+
+---
+
+## 🚀 Possible Extensions
+
+* Global cloud syncing for configuration and notes
+* Multi-AI provider support (Anthropic, Gemini)
+* Rich interactive shell mode (REPL)
+* Cross-platform package publishing (Homebrew, APT)
+
+---
+
+## 📜 License & Notice
+
+* Code: Open for educational and research use (MIT License)
+
+---
+
+### ✅ Final Note
+
+This project is designed to reflect **real modular JavaScript/Node architectures**, not just basic scripts.
+If you can build and extend this end-to-end, you’ve already mastered many patterns that appear in real industry CLI apps.

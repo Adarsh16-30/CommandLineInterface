@@ -1,6 +1,3 @@
-// help-all.js
-// Displays a comprehensive list of all 42 commands categorized by function.
-// Helps users discover the full capabilities of the toolkit.
 
 import chalk from 'chalk';
 

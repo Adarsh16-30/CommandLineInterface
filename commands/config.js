@@ -1,6 +1,3 @@
-// config.js
-// Interactive command for viewing and updating the CLI's saved preferences
-// (username, theme, etc.). Settings are stored in ~/.mycli-config.json.
 
 import inquirer from "inquirer";
 import { loadConfig, saveConfig } from "../utils/helpers.js";

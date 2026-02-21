@@ -1,6 +1,3 @@
-// selfupdate.js
-// Checks the npm registry for a newer version of mycli and optionally installs it.
-// Use --check to just see if an update is available without installing anything.
 
 import chalk from 'chalk';
 import axios from 'axios';

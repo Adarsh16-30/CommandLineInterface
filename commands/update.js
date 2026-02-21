@@ -1,10 +1,7 @@
-// update.js
-// Updates the globally installed mycli package to the latest version from npm.
 
 import { execSync } from "child_process";
 import ora from "ora";
 import chalk from "chalk";
-// Read the current version directly from package.json so it's always accurate
 import pkg from "../package.json" with { type: "json" };
 
 export default (program) => {

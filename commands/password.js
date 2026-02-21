@@ -1,12 +1,8 @@
-// password.js
-// Secuity swiss-army knife: generates strong random passwords and analyzes
-// the strength of existing ones using a point-based scoring system.
 
 import chalk from 'chalk';
 import crypto from 'crypto';
 import inquirer from 'inquirer';
 
-// Creates a random password based on the user's selected criteria (length, charset, etc.)
 function generatePassword(length, options) {
     const lowercase = 'abcdefghijklmnopqrstuvwxyz';
     const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -26,7 +22,6 @@ function generatePassword(length, options) {
     return password;
 }
 
-// Scans a password and assigns a strength score (0-100) based on complexity rules.
 function analyzeStrength(password) {
     let score = 0;
     const checks = {
@@ -64,7 +59,6 @@ function analyzeStrength(password) {
 
 export default function (program) {
     const password = program.command('password').description('Password generator and analyzer');
-
 
     password
         .command('generate')

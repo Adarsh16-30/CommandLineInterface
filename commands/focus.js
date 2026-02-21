@@ -1,6 +1,3 @@
-// focus.js
-// A simple Pomodoro timer to help you stay productive.
-// defaults to 25m work / 5m break, but you can customize it.
 
 import chalk from 'chalk';
 import inquirer from 'inquirer';

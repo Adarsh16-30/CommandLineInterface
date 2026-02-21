@@ -1,6 +1,3 @@
-// notes.js
-// Quick & dirty markdown notes manager.
-// Creates, lists, edits, and searches .md files in ~/.mycli-notes.
 
 import chalk from 'chalk';
 import fs from 'fs-extra';
@@ -16,7 +13,6 @@ async function ensureNotesDir() {
 
 export default function (program) {
     const notes = program.command('notes').description('Simple markdown notes manager');
-
 
     notes
         .command('new <title>')

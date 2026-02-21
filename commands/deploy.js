@@ -1,6 +1,3 @@
-// deploy.js
-// One-command deployment helpers for GitHub Pages, Netlify, and Vercel.
-// Checks if the necessary CLIs are installed and handles the build/push process.
 
 import chalk from 'chalk';
 import { exec } from 'child_process';

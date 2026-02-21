@@ -1,21 +1,13 @@
-// ssh.js
-// SSH connection manager that explicitly saves your servers to a local JSON file.
-// Allows you to "bookmark" servers and connect to them by name.
 
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import path from 'path';
 import os from 'os';
 import inquirer from 'inquirer';
-import { exec } from 'child_process';
-import { promisify } from 'util';
+import { recordAuditEntry } from '../utils/audit.js';
 
-const execAsync = promisify(exec);
-
-// Path to the JSON file where we store your connection details.
 const SSH_CONFIG_FILE = path.join(os.homedir(), '.mycli-ssh-config.json');
 
-// Reads the config file, returning an empty array if it doesn't exist yet.
 async function loadConnections() {
     try {
         if (await fs.pathExists(SSH_CONFIG_FILE)) {
@@ -27,7 +19,6 @@ async function loadConnections() {
     return [];
 }
 
-// Writes the updated connection list back to disk.
 async function saveConnections(connections) {
     try {
         await fs.writeJson(SSH_CONFIG_FILE, connections, { spaces: 2 });
@@ -36,15 +27,14 @@ async function saveConnections(connections) {
     }
 }
 
+export default function registerSshCommand(program) {
+    const sshCmdGroup = program.command('ssh').description('Secure Shell connection manager');
 
-export default function (program) {
-    const ssh = program.command('ssh').description('SSH connection manager');
-
-    ssh
+    sshCmdGroup
         .command('add')
         .description('Add new SSH connection')
         .action(async () => {
-            const answers = await inquirer.prompt([
+            const userProvidedInputs = await inquirer.prompt([
                 {
                     type: 'input',
                     name: 'name',
@@ -76,71 +66,80 @@ export default function (program) {
                 }
             ]);
 
-            const connections = await loadConnections();
-            connections.push(answers);
-            await saveConnections(connections);
+            const savedConnections = await loadConnections();
+            savedConnections.push(userProvidedInputs);
+            await saveConnections(savedConnections);
 
-            console.log(chalk.green(`\n Added connection: ${answers.name}`));
+            console.log(chalk.green(`\n Added connection: ${userProvidedInputs.name}`));
         });
 
-    ssh
+    sshCmdGroup
         .command('list')
         .alias('ls')
         .description('List saved SSH connections')
         .action(async () => {
-            const connections = await loadConnections();
+            const savedConnections = await loadConnections();
 
-            if (connections.length === 0) {
+            if (savedConnections.length === 0) {
                 console.log(chalk.yellow('\nNo saved connections. Use "mycli ssh add" to add one.\n'));
+                return;
+            }
+
+            const jsonOut = process.argv.includes("--output") && process.argv.includes("json");
+            if (jsonOut) {
+                console.log(JSON.stringify(savedConnections));
                 return;
             }
 
             console.log(chalk.bold.cyan('\n Saved SSH Connections\n'));
             console.log(chalk.gray('─'.repeat(70)));
 
-            connections.forEach((conn, i) => {
-                console.log(chalk.bold(`${i + 1}. ${conn.name}`));
-                console.log(chalk.gray(` ${conn.user}@${conn.host}:${conn.port}`));
-                if (conn.keyPath) console.log(chalk.gray(` Key: ${conn.keyPath}`));
+            savedConnections.forEach((connectionDetails, i) => {
+                console.log(chalk.bold(`${i + 1}. ${connectionDetails.name}`));
+                console.log(chalk.gray(` ${connectionDetails.user}@${connectionDetails.host}:${connectionDetails.port}`));
+                if (connectionDetails.keyPath) console.log(chalk.gray(` Key: ${connectionDetails.keyPath}`));
                 console.log();
             });
         });
 
-    ssh
+    sshCmdGroup
         .command('connect <name>')
-        .description('Connect to saved SSH server')
-        .action(async (name) => {
-            const connections = await loadConnections();
-            const conn = connections.find(c => c.name === name);
+        .description('Connect to saved SSH server (Privileged)')
+        .action(async (connectionNameId) => {
+            const savedConnections = await loadConnections();
+            const targetConnection = savedConnections.find(c => c.name === connectionNameId);
 
-            if (!conn) {
-                console.log(chalk.red(`\n Connection "${name}" not found\n`));
-                return;
+            if (!targetConnection) {
+                console.log(chalk.red(`\n Connection "${connectionNameId}" not found\n`));
+                process.exit(1);
             }
 
-            const keyFlag = conn.keyPath ? `-i ${conn.keyPath}` : '';
-            const sshCmd = `ssh ${keyFlag} -p ${conn.port} ${conn.user}@${conn.host}`;
+            const keyFlag = targetConnection.keyPath ? `-i ${targetConnection.keyPath}` : '';
+            const sshConnectionString = `ssh ${keyFlag} -p ${targetConnection.port} ${targetConnection.user}@${targetConnection.host}`;
 
-            console.log(chalk.cyan(`\n Connecting to ${conn.name}...\n`));
-            console.log(chalk.gray(`Command: ${sshCmd}\n`));
+            console.log(chalk.cyan(`\n Authenticating to enterprise server: ${targetConnection.name}...\n`));
+
+            recordAuditEntry('ssh connect', [targetConnection.host, targetConnection.user, targetConnection.port]);
 
             try {
                 const { spawn } = await import('child_process');
-                const sshProcess = spawn('ssh', [
-                    ...(conn.keyPath ? ['-i', conn.keyPath] : []),
-                    '-p', conn.port,
-                    `${conn.user}@${conn.host}`
+                const secureShellProcess = spawn('ssh', [
+                    ...(targetConnection.keyPath ? ['-i', targetConnection.keyPath] : []),
+                    '-p', targetConnection.port,
+                    `${targetConnection.user}@${targetConnection.host}`
                 ], { stdio: 'inherit' });
 
-                sshProcess.on('close', (code) => {
-                    console.log(chalk.gray(`\nConnection closed (exit code: ${code})`));
+                secureShellProcess.on('close', (exitCode) => {
+                    console.log(chalk.gray(`\nRemote session terminated (exit code: ${exitCode})`));
+                    process.exit(exitCode);
                 });
-            } catch (err) {
-                console.error(chalk.red('Connection failed:'), err.message);
+            } catch (connectionError) {
+                console.error(chalk.red('Enterprise connection instantiation failed:'), connectionError.message);
+                process.exit(1);
             }
         });
 
-    ssh
+    sshCmdGroup
         .command('remove <name>')
         .alias('rm')
         .description('Remove saved SSH connection')
@@ -159,7 +158,7 @@ export default function (program) {
             console.log(chalk.green(`\n Removed connection: ${name}\n`));
         });
 
-    ssh
+    sshCmdGroup
         .command('edit <name>')
         .description('Edit saved SSH connection')
         .action(async (name) => {

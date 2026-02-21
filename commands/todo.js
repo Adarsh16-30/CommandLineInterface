@@ -3,10 +3,8 @@ import path from "path";
 import os from "os";
 import chalk from "chalk";
 
-// Store the todo list as a JSON file in the user's home directory
 const DB = path.join(os.homedir(), ".mycli-todos.json");
 
-// Helper functions to read/write the DB
 async function readDB(){ return fs.existsSync(DB) ? fs.readJson(DB) : []; }
 async function writeDB(data){ await fs.writeJson(DB, data, { spaces: 2 }); }
 
@@ -17,7 +15,6 @@ export default (program) => {
     .action(async (action, textOrId) => {
       const todos = await readDB();
 
-      // Simple switch-case for the 4 CRUD actions
       if (action === "add") {
         if (!textOrId) return console.log(chalk.red("Please provide a task"));
         todos.push({ id: Date.now(), task: textOrId, done: false, created: new Date() });

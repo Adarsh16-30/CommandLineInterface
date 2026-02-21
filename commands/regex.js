@@ -1,6 +1,3 @@
-// regex.js
-// Interactive Regular Expression tester. Type a pattern and a test string,
-// and see matches highlighted in real-time. Great for debugging complex regex.
 
 import chalk from 'chalk';
 import inquirer from 'inquirer';

@@ -1,6 +1,3 @@
-// disk.js
-// Disk space visualizer and cleaner. Helps you find what's eating your storage
-// and provides a dedicated tool for finding and deleting node_modules folders.
 
 import chalk from 'chalk';
 import fs from 'fs-extra';
@@ -8,7 +5,6 @@ import path from 'path';
 import inquirer from 'inquirer';
 import ora from 'ora';
 
-// Recursively calculates the size of a directory.
 async function getDirSize(dirPath) {
     let totalSize = 0;
 

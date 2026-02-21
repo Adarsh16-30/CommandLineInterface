@@ -1,6 +1,3 @@
-// build.js
-// Compiles your Node.js project into a standalone executable (exe/bin).
-// Uses Vercel's 'pkg' under the hood so you can ship a single file.
 
 import chalk from 'chalk';
 import { exec } from 'child_process';
@@ -37,7 +34,6 @@ export default function (program) {
             const spinner = ora('Compiling binary...').start();
 
             try {
-                // Check if pkg is installed
                 try {
                     await execAsync('npx pkg --version');
                 } catch (err) {
@@ -46,7 +42,6 @@ export default function (program) {
                     await execAsync('npm install -g pkg');
                 }
 
-                // Build the binary
                 const cmd = `npx pkg index.js --target ${target} --output dist/${outputName}`;
                 await execAsync(cmd);
 

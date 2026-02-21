@@ -1,5 +1,3 @@
-// time.js
-// Prints the current local time and date in a friendly format.
 
 import chalk from "chalk";
 

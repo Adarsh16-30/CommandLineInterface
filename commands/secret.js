@@ -5,23 +5,18 @@ import path from "path";
 import os from "os";
 
 const ALGORITHM = "aes-256-cbc"; // Standard strong encryption
-// Store the encryption key in the user's home directory
 const KEY_FILE = path.join(os.homedir(), ".mycli-encryption-key");
 
-// Get or create a persistent encryption key
 function getEncryptionKey() {
-  // 1. Check env var (useful for CI/CD)
   if (process.env.ENCRYPTION_KEY && process.env.ENCRYPTION_KEY.length === 64) {
     return Buffer.from(process.env.ENCRYPTION_KEY, "hex");
   }
 
-  // 2. Check for the local key file
   if (fs.existsSync(KEY_FILE)) {
     const keyHex = fs.readFileSync(KEY_FILE, "utf8").trim();
     return Buffer.from(keyHex, "hex");
   }
 
-  // 3. If neither exist, generate a new key and save it
   const newKey = crypto.randomBytes(32); // 32 bytes = 256 bits
   fs.writeFileSync(KEY_FILE, newKey.toString("hex"));
   warn(`New encryption key generated and saved to: ${KEY_FILE}`);
@@ -37,7 +32,6 @@ function encrypt(text) {
   let encrypted = cipher.update(text, "utf8", "hex");
   encrypted += cipher.final("hex");
   
-  // Prepend the IV to the encrypted data (needed for decryption)
   return iv.toString("hex") + ":" + encrypted;
 }
 
@@ -91,7 +85,6 @@ export default function (program) {
         await fs.writeFile(outputFile, decrypted);
         success(`File decrypted successfully: ${outputFile}`);
       } catch (err) {
-        // Give a more helpful error for the most common failure
         if (err.message.includes("bad decrypt")) {
           error(`Decryption failed: Wrong encryption key or corrupted file`);
           info(`Make sure you're using the same key that was used for encryption`);

@@ -1,6 +1,3 @@
-// json-tools.js
-// utilities for working with JSON files: validate syntax, format/prettify,
-// view with syntax highlighting, and query specific fields using dot notation.
 
 import chalk from 'chalk';
 import fs from 'fs-extra';

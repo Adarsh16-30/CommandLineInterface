@@ -4,7 +4,6 @@ import { v4 as uuidv4 } from 'uuid';
 import qrcode from 'qrcode-terminal';
 import { jwtDecode } from 'jwt-decode';
 
-
 export default function (program) {
  const utils = program.command('utils').description('Developer utilities and generators');
 

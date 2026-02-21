@@ -1,6 +1,5 @@
 import blessed from 'blessed';
 
-
 export const themes = {
  default: {
  primary: '#61afef',
@@ -47,10 +46,8 @@ export class TUIEngine {
  dockBorders: true
  });
 
- // Enable mouse support
  this.screen.enableMouse();
 
- // Handle Ctrl+C and q for exit
  this.screen.key(['C-c', 'q'], () => {
  this.destroy();
  });

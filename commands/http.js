@@ -1,11 +1,9 @@
-// http.js
-// A lightweight HTTP client for testing APIs directly from the terminal.
-// Supports GET, POST, custom headers, and pretty-printed JSON responses.
 
 import axios from 'axios';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 import ora from 'ora';
+import { executeWithRetry, executeWithTimeout } from '../utils/resilience.js';
 
 export default function (program) {
     const http = program.command('http').description('HTTP client for API testing');
@@ -17,10 +15,9 @@ export default function (program) {
         .action(async (url, options) => {
             const spinner = ora(`Sending GET request to ${url}...`).start();
 
-
             try {
                 const headers = options.headers ? JSON.parse(options.headers) : {};
-                const response = await axios.get(url, { headers });
+                const response = await executeWithRetry(() => executeWithTimeout(axios.get(url, { headers }), 10000));
 
                 spinner.succeed(`${response.status} ${response.statusText}`);
 
@@ -55,7 +52,7 @@ export default function (program) {
             try {
                 const data = options.data ? JSON.parse(options.data) : {};
                 const headers = options.headers ? JSON.parse(options.headers) : { 'Content-Type': 'application/json' };
-                const response = await axios.post(url, data, { headers });
+                const response = await executeWithRetry(() => executeWithTimeout(axios.post(url, data, { headers }), 10000));
 
                 spinner.succeed(`${response.status} ${response.statusText}`);
 
@@ -121,7 +118,7 @@ export default function (program) {
                     config.data = JSON.parse(answers.body);
                 }
 
-                const response = await axios(config);
+                const response = await executeWithRetry(() => executeWithTimeout(axios(config), 10000));
                 spinner.succeed(`${response.status} ${response.statusText}`);
 
                 console.log(chalk.bold.cyan('\n Response:\n'));

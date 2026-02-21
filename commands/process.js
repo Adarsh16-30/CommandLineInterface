@@ -1,6 +1,3 @@
-// process.js
-// Interactive process manager. Lists top resource-consuming processes and
-// allows searching/filtering. Like 'top' or 'htop' but simpler and Node-based.
 
 import chalk from 'chalk';
 import si from 'systeminformation';

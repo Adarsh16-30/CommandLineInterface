@@ -1,12 +1,8 @@
-// network.js
-// Network diagnostic tools: IP lookup, speed test, and bandwidth monitoring.
-// Helps you troubleshoot connectivity issues without opening a browser.
 
 import chalk from 'chalk';
 import si from 'systeminformation';
 import FastSpeedtest from 'fast-speedtest-api';
 import ora from 'ora';
-
 
 export default function (program) {
     const net = program.command('net').description('Network utilities suite');
@@ -16,7 +12,6 @@ export default function (program) {
         .description('Show local and public IP addresses')
         .action(async () => {
             const spinner = ora('Fetching IP information...').start();
-
 
             try {
                 const networkInterfaces = await si.networkInterfaces();
@@ -40,7 +35,6 @@ export default function (program) {
                 console.error(chalk.red(err.message));
             }
         });
-
 
     net
         .command('speed')

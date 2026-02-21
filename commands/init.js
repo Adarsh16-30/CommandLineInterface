@@ -1,7 +1,3 @@
-// init.js
-// Scaffolds a new project from a template (react, express, nextjs, python, etc.).
-// For framework templates it delegates to the official CLI tools (vite, create-next-app).
-// For simpler templates it writes the files directly.
 
 import fs from "fs-extra";
 import path from "path";
@@ -26,11 +22,9 @@ export default program => {
 
         const template = opts.template?.toLowerCase();
 
-        // --- 1. Template Scaffolding ---
         if (template) {
           spinner.text = `Scaffolding ${template} template...`;
 
-          // Handle external scaffolders (vite, next)
           if (template === "react" || template === "vite_react") {
             exec(`npm create vite@latest ${name} -- --template react -y`, { stdio: "inherit" }, (err) => {
               if (err) spinner.fail(`${template} template failed`);
@@ -45,7 +39,6 @@ export default program => {
             });
             return; // External command
           }
-          // Handle manual scaffolding
           else if (template === "express" || template === "node_api") {
             await fs.writeJson(path.join(dir, "package.json"), { name, version: "1.0.0", main: "index.js", scripts: { start: "node index.js" } }, { spaces: 2 });
             const mainFile = path.join(dir, template === "express" ? "index.js" : "server.js");
@@ -63,16 +56,12 @@ export default program => {
             return;
           }
         }
-        // If no template, just a basic node project
         else {
           await fs.writeJson(path.join(dir, "package.json"), { name, version: "1.0.0", scripts: { start: "node index.js" } }, { spaces: 2 });
           await fs.writeFile(path.join(dir, "index.js"), 'console.log("Hello world");');
           spinner.succeed("Basic project created");
         }
 
-        // --- 2. Post-Scaffolding Steps ---
-
-        // Git init
         if (opts.git) {
           const git = simpleGit(dir);
           await git.init();
@@ -81,10 +70,8 @@ export default program => {
           console.log(chalk.green("Git repository initialized"));
         }
 
-        // Install dependencies
         if (opts.install) {
           spinner.text = "Installing dependencies...";
-          // Run npm install *inside* the new directory
           exec(`cd ${dir} && npm install`, (err) => {
             if (err) console.error(err);
             else spinner.succeed("Dependencies installed");

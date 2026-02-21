@@ -1,6 +1,3 @@
-// info.js
-// Displays a quick snapshot of the machine's CPU, RAM, OS, and Node.js version.
-// All three system calls run in parallel so the output appears quickly.
 
 import si from "systeminformation";
 import chalk from "chalk";
@@ -12,7 +9,6 @@ export default (program) => {
     .action(async () => {
       console.log(chalk.blueBright("Gathering system info..."));
 
-      // Fire all three requests at once instead of waiting for each one sequentially.
       const [cpu, mem, osInfo] = await Promise.all([
         si.cpu(),
         si.mem(),

@@ -1,6 +1,3 @@
-// clipboard.js
-// interacting with the system clipboard (copy/paste) from the terminal.
-// Useful for piping output to clipboard or pasting into files.
 
 import chalk from 'chalk';
 import clipboardy from 'clipboardy';
@@ -12,7 +9,6 @@ const execAsync = promisify(exec);
 
 export default function (program) {
     const clip = program.command('clip').description('Clipboard utilities');
-
 
     clip
         .command('copy <text>')
