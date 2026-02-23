@@ -1,3 +1,0 @@
-[31m[39m
-[31m✖ [Promise Error] A background task failed unexpectedly:[39m
-[31mSyntaxError: Invalid regular expression flags[39m
