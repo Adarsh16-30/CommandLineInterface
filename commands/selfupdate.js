@@ -6,6 +6,12 @@ import inquirer from 'inquirer';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs-extra';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const pkg = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf-8'));
 
 const execAsync = promisify(exec);
 
@@ -18,7 +24,7 @@ export default function (program) {
             const spinner = ora('Checking for updates...').start();
 
             try {
-                const currentVersion = '3.0.0';
+                const currentVersion = pkg.version;
                 const response = await axios.get('https://registry.npmjs.org/@adarsht0912/mycli/latest');
                 const latestVersion = response.data.version;
 
