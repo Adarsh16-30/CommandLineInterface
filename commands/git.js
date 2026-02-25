@@ -2,6 +2,7 @@
 import simpleGit from "simple-git";
 import ora from "ora";
 import chalk from "chalk";
+import inquirer from "inquirer";
 
 export default (program) => {
   program
@@ -18,7 +19,12 @@ export default (program) => {
             break;
           case "commit":
             await git.add(".");
-            await git.commit("Initial commit from mycli ");
+            spinner.stop();
+            const { message } = await inquirer.prompt([
+              { type: "input", name: "message", message: "Commit message:" }
+            ]);
+            spinner.start("Committing...");
+            await git.commit(message || "Update from mycli");
             spinner.succeed(chalk.green("Changes committed."));
             break;
           case "push":

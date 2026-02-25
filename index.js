@@ -12,6 +12,8 @@ import fs from "fs-extra";
 import path from "path";
 import { logger } from "./utils/logger.js";
 import { fileURLToPath, pathToFileURL } from "url";
+import { loadConfig } from "./utils/helpers.js";
+import https from "https";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,6 +44,36 @@ if (process.argv.some(arg => SECRETS_PATTERNS.some(p => p.test(arg)))) {
   logger.warn("Potential secret leak detected in command arguments.");
   console.error(chalk.bgRed.white.bold("\n ⚠️ WARNING: Potential secret passed in plain text. Please use secure config profiles instead. \n"));
 }
+
+const config = await loadConfig();
+
+// --- TELEMETRY IMPLEMENTATION ---
+// Sends an anonymous ping when a command is executed if telemetry is enabled.
+const sendTelemetry = (commandName) => {
+  if (config.telemetryEnabled) {
+    const data = JSON.stringify({
+      event: "command_executed",
+      command: commandName,
+      os: process.platform,
+      node_version: process.version,
+      timestamp: new Date().toISOString()
+    });
+
+    const req = https.request("https://reqres.in/api/users", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Content-Length": data.length
+      }
+    });
+
+    // We don't want telemetry to crash the CLI or block execution
+    req.on("error", () => { });
+    req.write(data);
+    req.end();
+  }
+};
+// --------------------------------
 
 const program = new Command();
 
@@ -76,11 +108,11 @@ async function loadCommands() {
           const { default: p } = await import(path.join("file://", pluginsDir, plugin, "index.js"));
           if (p && p.commands) {
             p.commands.forEach(cmd => {
-              program.command(cmd.name).description(`[Plugin] ${cmd.description}`).action(cmd.action);
+              program.command(cmd.name).description(`[Plugin] ${cmd.description} `).action(cmd.action);
             });
           }
         } catch (err) {
-          logger.error(`Failed to load plugin: ${plugin}`, { error: err.message });
+          logger.error(`Failed to load plugin: ${plugin} `, { error: err.message });
         }
       }
     }
@@ -88,6 +120,15 @@ async function loadCommands() {
 }
 
 loadCommands().then(() => {
+  // Intercept command execution for telemetry
+  program.hook('preAction', (thisCommand) => {
+    const commandedArgs = thisCommand.args;
+    if (commandedArgs.length > 0) {
+      sendTelemetry(commandedArgs[0]);
+    } else {
+      sendTelemetry(thisCommand.name());
+    }
+  });
+
   program.parse(process.argv);
 });
-
